@@ -17,6 +17,39 @@ const login = async (email, password) => {
     return { code: 200, token };
 };
 
+// The function "validateEmail" was taken from the site: https://www.horadecodar.com.br/2020/09/13/como-validar-email-com-javascript/
+function validateEmail(email) {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  }
+
+const validateUser = async (displayName, email, password) => {
+    if (displayName.length < 8) {
+        return { code: 400, 
+               message: '"displayName" length must be at least 8 characters long' }; 
+       }
+           if (!validateEmail(email)) {
+ return { code: 400, 
+            message: '"email" must be a valid email' }; 
+}
+           if (password.length < 6) {
+        return { code: 400, 
+               message: '"password" length must be at least 6 characters long' }; 
+       }
+           const user = await User.findOne({ where: { email } });
+           if (user) return { code: 409, message: 'User already registered' };
+           return { code: false };
+}; 
+
+const addUser = async (displayName, email, password, image) => {
+    const { code, message } = await validateUser(displayName, email, password);
+    if (code) return { code, message }; 
+    await User.create({ displayName, email, password, image });
+    const token = jwt.sign({ data: displayName, email }, secret, jwtConfig);
+    return { code: 201, token };
+};
+
 module.exports = {
     login,
+    addUser,
 };
