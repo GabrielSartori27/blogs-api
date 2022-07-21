@@ -13,7 +13,7 @@ const login = async (email, password) => {
     if (!email || !password) return { code: 400, message: 'Some required fields are missing' };
     const user = await User.findOne({ where: { email, password } });
     if (!user) return { code: 400, message: 'Invalid fields' };
-    const token = jwt.sign({ data: email }, secret, jwtConfig);
+    const token = jwt.sign({ data: { email } }, secret, jwtConfig);
     return { code: 200, token };
 };
 
@@ -45,11 +45,18 @@ const addUser = async (displayName, email, password, image) => {
     const { code, message } = await validateUser(displayName, email, password);
     if (code) return { code, message }; 
     await User.create({ displayName, email, password, image });
-    const token = jwt.sign({ data: displayName, email }, secret, jwtConfig);
+    const token = jwt.sign({ data: { displayName, email } }, secret, jwtConfig);
     return { code: 201, token };
+};
+
+const getUsers = async () => {
+    const users = await User.findAll({ attributes: { exclude: 'password' } });
+    if (!users) return { code: 404, message: 'Users not found' };
+    return { code: 200, users };
 };
 
 module.exports = {
     login,
     addUser,
+    getUsers,
 };

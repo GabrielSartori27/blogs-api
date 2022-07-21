@@ -15,7 +15,14 @@ const addUser = async (req, res) => {
     return res.status(code).json({ token });
 };
 
+const getUsers = async (req, res) => {
+    const { code, message, users } = await UsersServices.getUsers();
+    if (message) return { code, message };
+    return res.status(code).json(users);
+};
+
 module.exports = {
     login,
     addUser,
+    getUsers,
 };

@@ -1,5 +1,6 @@
 const express = require('express');
 const UsersController = require('./database/controllers/usersControllers');
+const validateJWT = require('./auth/validateJWT');
 
 // ...
 
@@ -9,6 +10,7 @@ app.use(express.json());
 
 app.post('/login', UsersController.login);
 app.post('/user', UsersController.addUser);
+app.get('/user', validateJWT, UsersController.getUsers);
 
 // ...
 
