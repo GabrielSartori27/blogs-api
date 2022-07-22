@@ -1,5 +1,6 @@
 const express = require('express');
 const UsersController = require('./database/controllers/usersControllers');
+const CategoriesController = require('./database/controllers/categoriesControllers');
 const validateJWT = require('./auth/validateJWT');
 
 // ...
@@ -12,6 +13,7 @@ app.post('/login', UsersController.login);
 app.post('/user', UsersController.addUser);
 app.get('/user', validateJWT, UsersController.getUsers);
 app.get('/user/:id', validateJWT, UsersController.getUserById);
+app.post('/categories', validateJWT, CategoriesController.addCategory);
 
 // ...
 
