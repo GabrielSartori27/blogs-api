@@ -22,15 +22,15 @@ const getUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-    const {id} = req.params;
-    const {code, message, user} = await UsersServices.getUserById(id);
-    if(message) return res.status(code).json({message});
+    const { id } = req.params;
+    const { code, message, user } = await UsersServices.getUserById(id);
+    if (message) return res.status(code).json({ message });
     return res.status(code).json(user); 
-}
+};
 
 module.exports = {
     login,
     addUser,
     getUsers,
-    getUserById
+    getUserById,
 };

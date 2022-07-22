@@ -2,7 +2,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/index');
 
-const secret = "" + process.env.JWT_KEY;
+const secret = `${process.env.JWT_KEY}`;
 
 const jwtConfig = {
     expiresIn: '7d',
@@ -57,13 +57,13 @@ const getUsers = async () => {
 
 const getUserById = async (id) => {
     const user = await User.findByPk(id, { attributes: { exclude: 'password' } });
-    if(!user) return {code: 404, message: "User does not exist"};
-    return {code: 200, user};
-}
+    if (!user) return { code: 404, message: 'User does not exist' };
+    return { code: 200, user };
+};
 
 module.exports = {
     login,
     addUser,
     getUsers,
-    getUserById
+    getUserById,
 };
