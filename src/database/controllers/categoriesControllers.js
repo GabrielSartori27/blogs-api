@@ -7,13 +7,13 @@ const addCategory = async (req, res) => {
     return res.status(code).json(newCategory);
 };
 
-const getCategories = async(req, res) => {
-    const {code, message, categories} = await CategoriesServices.getCategories();
-    if(message) return res.status(code).json({message});
+const getCategories = async (req, res) => {
+    const { code, message, categories } = await CategoriesServices.getCategories();
+    if (message) return res.status(code).json({ message });
     return res.status(code).json(categories);
-}
+};
 
 module.exports = {
     addCategory,
-    getCategories
+    getCategories,
 };
