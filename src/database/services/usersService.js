@@ -2,7 +2,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/index');
 
-const secret = `${process.env.JWT_KEY}`;
+const secret = process.env.JWT_SECRET;
 
 const jwtConfig = {
     expiresIn: '7d',
