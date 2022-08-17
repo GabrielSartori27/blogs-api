@@ -22,8 +22,19 @@ const addPost = async (req, res) => {
     return res.status(code).json(post);
 };
 
+const updatePost = async (req, res) => {
+    const { dataValues } = req.user;
+    const { id } = req.params;
+    const { title, content } = req.body;
+    const { code, message, editedPost } = await BlogPostsService
+        .updatePost(id, dataValues.id, title, content);
+    if (message) return res.status(code).json({ message });
+    return res.status(code).json(editedPost);
+};
+
 module.exports = {
     getPosts,
     addPost,
     getPostById,
+    updatePost,
 };
