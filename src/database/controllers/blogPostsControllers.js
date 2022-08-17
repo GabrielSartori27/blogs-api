@@ -1,10 +1,18 @@
 const BlogPostsService = require('../services/blogPostsService');
 
-const getPosts = async (req, res) => {
+const getPosts = async (_req, res) => {
     const { code, message, posts } = await BlogPostsService.getPosts();
     if (message) return res.status(code).json({ message });
     return res.status(code).json(posts);
 };
+
+const getPostById = async (req, res) => {
+    const { id } = req.params;
+    const { code, message, post } = await BlogPostsService.getPostById(id);
+    if (message) return res.status(code).json({ message });
+    return res.status(code).json(post);
+};
+
 const addPost = async (req, res) => {
     const { dataValues } = req.user;
     const { title, content, categoryIds } = req.body;
@@ -17,4 +25,5 @@ const addPost = async (req, res) => {
 module.exports = {
     getPosts,
     addPost,
+    getPostById,
 };

@@ -9,6 +9,14 @@ const getPosts = async () => {
     return { code: 200, posts };
 };
 
+const getPostById = async (id) => {
+    const post = await BlogPost.findByPk(id, {
+include: [{ model: User, as: 'user', attributes: { exclude: 'password' } },
+    { model: Category, as: 'categories', through: { attributes: [] } }] });
+    if (!post) return { code: 404, message: 'Post does not exist' };
+    return { code: 200, post };
+};
+
 const checkIds = async (categoryIds) => {
     const categories = await Category.findAll();
     let isValid = true;
@@ -35,4 +43,5 @@ const addPost = async (userId, title, content, categoryIds) => {
 module.exports = {
     getPosts,
     addPost,
+    getPostById,
 };
