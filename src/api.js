@@ -20,6 +20,7 @@ app.get('/post', validateJWT, BlogPostsController.getPosts);
 app.get('/post/:id', validateJWT, BlogPostsController.getPostById);
 app.post('/post', validateJWT, BlogPostsController.addPost);
 app.put('/post/:id', validateJWT, BlogPostsController.updatePost);
+app.delete('/post/:id', validateJWT, BlogPostsController.deletePost);
 
 // ...
 
