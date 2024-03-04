@@ -13,6 +13,12 @@ const getPostById = async (req, res) => {
     return res.status(code).json(post);
 };
 
+const getPostByQuery = async (req, res) => {
+    const { q } = req.query;
+    const { code, posts } = await BlogPostsService.getPostByQuery(q);
+    return res.status(code).json(posts);
+};
+
 const addPost = async (req, res) => {
     const { dataValues } = req.user;
     const { title, content, categoryIds } = req.body;
@@ -44,6 +50,7 @@ module.exports = {
     getPosts,
     addPost,
     getPostById,
+    getPostByQuery,
     updatePost,
     deletePost,
 };

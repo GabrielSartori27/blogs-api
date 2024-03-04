@@ -1,0 +1,409 @@
+openapi: 3.0.1
+info:
+  title: Blogs API
+  description: API to control users and their posts.
+  version: '1.0'
+  contact:
+    name: My Linkedin
+    url: https://www.linkedin.com/in/gabriel-sartori-b9b44622a/
+externalDocs:
+  description: Project on GitHub
+  url: https://github.com/GabrielSartori27/talker-manager-api
+servers:
+- url: http://localhost:3000
+  description: Local API
+paths:
+  /login:
+    post:
+      tags:
+        [Login]
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: lewishamilton@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: 123456
+                  minLength: 6
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "JWT Token"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: "Invalid fields"
+  /user:
+    get:
+      tags:
+        [User]
+      summary: Get all users
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Users"
+    post:
+      tags:
+        [User]
+      summary: Create new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: "#/components/schemas/Users"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "JWT Token"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: "Invalid field"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: "Invalid token"
+        409:
+          description: User already registered
+          content:
+            application/json:
+              example: "User already registered"
+      security:
+      - auth: []
+                  
+  /user/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      tags:
+        [User]
+      summary: Get user by id
+      responses:
+        200:
+          description: Sucess
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: "Invalid token"
+        404:
+          description: User not found
+          content:
+            application/json:
+              example: "User does not exist"
+  /user/me:
+    delete:
+      tags:
+        [User]
+      summary: Delete user
+      responses:
+        204:
+          description: OK
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: "Invalid token"
+  /categories:
+    get:
+      tags:
+        [Categories]
+      summary: Get all categories
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Categories"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: "Invalid token"
+    post:
+      tags:
+        [Categories]
+      summary: Create category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Technology"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Categories"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: "Invalid field"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: "Invalid token"
+  /post:
+    post:
+      tags:
+        [Post]
+      summary: Create new post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Technology"
+                content:
+                  type: string
+                categoryIds:
+                  type: array
+                  items:
+                    type: number
+                    example: 1, 2
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    example: 1
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  userId:
+                    type: number
+                    example: 1
+                  updated:
+                    type: string
+                    example: "2022-05-18T18:00:01.196Z"
+                  published:
+                    type: string
+                    example: "2022-05-18T18:00:01.196Z"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: "Invalid field"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: "Invalid token"
+    get:
+      tags:
+        [Post]
+      summary: Get all posts
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Posts"
+  /post/search:
+    parameters:
+    - in: query
+      name: q
+      schema: 
+        type: string
+        description: Title or content
+        example: Title or content
+    get:
+      tags:
+        [Post]
+      summary: Get post by tile or content
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Posts"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: "Invalid token"
+      security:
+      - auth: []
+  /post/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      tags:
+        [Post]
+      summary: Get post by id
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Posts"
+    put:
+      tags: 
+        [Post]
+      summary: Update post by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Posts"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              example: "Invalid field"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: "Invalid token"
+    delete:
+      tags:
+        [Post]
+      summary: Delete post by id
+      responses:
+        204:
+          description: Deleted
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              example: "Unauthorized user"
+        404:
+          description: Not Found
+          content:
+            application/json:
+              example: "Post does not exist"
+      
+components:
+  schemas:
+    Users:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        image:
+          type: string
+          example: "image url"
+    Categories:
+      type: object
+      properties:
+          id:
+            type: integer
+            example: 1
+          name:
+            type: string
+            example: 'Technology'
+    Posts:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        title:
+          type: string
+        content:
+          type: string
+        userId:
+          type: number
+          example: 1
+        updated:
+          type: string
+          example: "2022-05-18T18:00:01.196Z"
+        published:
+          type: string
+          example: "2022-05-18T18:00:01.196Z"
+        user:
+              $ref: "#/components/schemas/Users"
+        categories:
+          type: array
+          items:
+              $ref: "#/components/schemas/Categories"
+  securitySchemes:
+    auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

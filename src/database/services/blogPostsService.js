@@ -1,20 +1,39 @@
+const { Op } = require('sequelize');
 const { BlogPost, User, Category, PostCategory } = require('../models/index');
 
+const { include } = {
+    include: [{ model: User, as: 'user', attributes: { exclude: 'password' } },
+    { model: Category, as: 'categories', through: { attributes: [] } }],
+};
+
 const getPosts = async () => {
-    const posts = await BlogPost.findAll({
-        include: [{ model: User, as: 'user', attributes: { exclude: 'password' } },
-        { model: Category, as: 'categories', through: { attributes: [] } }],
-    });
+    const posts = await BlogPost.findAll({ include });
     if (!posts) return { code: 404, messgage: 'Posts not found' };
     return { code: 200, posts };
 };
 
 const getPostById = async (id) => {
-    const post = await BlogPost.findByPk(id, {
-include: [{ model: User, as: 'user', attributes: { exclude: 'password' } },
-    { model: Category, as: 'categories', through: { attributes: [] } }] });
+    const post = await BlogPost.findByPk(id, { include });
     if (!post) return { code: 404, message: 'Post does not exist' };
     return { code: 200, post };
+};
+
+const checkQuery = async (query) => {
+    if (!query) {
+        const allPosts = await BlogPost.findAll({ include });
+        return { code: 200, posts: allPosts };
+    }
+};
+
+const getPostByQuery = async (query) => {
+    checkQuery(query);
+    const postsByTitle = await BlogPost
+        .findAll({ where: { title: { [Op.like]: `%${query}%` } }, include });
+    if (postsByTitle.length) return { code: 200, posts: postsByTitle };
+    const postsByContent = await BlogPost
+        .findAll({ where: { content: { [Op.like]: `%${query}%` } }, include });
+    if (postsByContent.length) return { code: 200, posts: postsByContent };
+    if (!postsByTitle.length && !postsByContent.length) return { code: 200, posts: [] };
 };
 
 const checkIds = async (categoryIds) => {
@@ -46,9 +65,7 @@ const updatePost = async (id, userId, title, content) => {
     if (!title || !content) return { code: 400, message: 'Some required fields are missing' };
     const [updatedPost] = await BlogPost.update({ title, content }, { where: { id } });
     if (!updatedPost) return { code: 404, message: 'Post does not exist' };
-    const editedPost = await BlogPost.findByPk(id, {
-        include: [{ model: User, as: 'user', attributes: { exclude: 'password' } },
-            { model: Category, as: 'categories', through: { attributes: [] } }] });
+    const editedPost = await BlogPost.findByPk(id, { include });
     return { code: 200, editedPost };
 };
 
@@ -64,6 +81,7 @@ module.exports = {
     getPosts,
     addPost,
     getPostById,
+    getPostByQuery,
     updatePost,
     deletePost,
 };
