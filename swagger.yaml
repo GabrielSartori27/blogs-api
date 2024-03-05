@@ -73,7 +73,22 @@ paths:
         content:
           application/json:
             schema:
-                $ref: "#/components/schemas/Users"
+                type: object
+                properties:
+                  displayName:
+                    type: string
+                    example: userName
+                    minLength: 6
+                  email:
+                    type: string
+                    format: email
+                  password:
+                    type: string
+                    example: 123456
+                    minLength: 6
+                  image:
+                    type: string
+                    example: image url
       responses:
         201:
           description: Created
@@ -210,10 +225,7 @@ paths:
                 content:
                   type: string
                 categoryIds:
-                  type: array
-                  items:
-                    type: number
-                    example: 1, 2
+                  example: [1, 2]
       responses:
         201:
           description: Created

@@ -37,14 +37,13 @@ const getPostByQuery = async (query) => {
 };
 
 const checkIds = async (categoryIds) => {
+    const checkType = (id) => typeof id === 'number';
+    if (!categoryIds.every(checkType)) return false; 
     const categories = await Category.findAll();
-    let isValid = true;
-    categoryIds.forEach((id) => {
-        if (Number(id) > categories[categories.length - 1].id || Number(id) < 0) {
-            isValid = false;  
-        }
-    });
-    return isValid; 
+    const ids = categories.map((category) => category.id);
+    const validIds = categoryIds.filter((id) => ids.includes(id));
+    if (validIds.length !== categoryIds.length) return false;
+    return true;
 };
 
 const addPost = async (userId, title, content, categoryIds) => {
