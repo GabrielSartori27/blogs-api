@@ -5,13 +5,14 @@ const { User } = require('../database/models');
 const secret = `${process.env.JWT_SECRET}`;
 
 module.exports = async (req, res, next) => {
-    const token = req.headers.authorization;
-    if (!token) {
+    const extractToken = (bearerToken) => bearerToken.split(' ')[1];
+    const bearerToken = req.headers.authorization;
+    if (!bearerToken) {
         return res.status(401).json({ message: 'Token not found' });
       }
     try {
+        const token = extractToken(bearerToken);
         const decoded = jwt.verify(token, secret);
-        console.log(decoded);
         const user = await User.findOne({ where: { email: decoded.data.email } });
         if (!user) {
             return res

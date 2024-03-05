@@ -40,7 +40,7 @@ const checkIds = async (categoryIds) => {
     const categories = await Category.findAll();
     let isValid = true;
     categoryIds.forEach((id) => {
-        if (id > categories[categories.length - 1].id || id < 0) {
+        if (Number(id) > categories[categories.length - 1].id || Number(id) < 0) {
             isValid = false;  
         }
     });
@@ -48,14 +48,18 @@ const checkIds = async (categoryIds) => {
 };
 
 const addPost = async (userId, title, content, categoryIds) => {
+    const checkedIds = await checkIds(categoryIds); 
     if (!title || !content) return { code: 400, message: 'Some required fields are missing' };
-    if (!await checkIds(categoryIds)) return { code: 400, message: '"categoryIds" not found' };
+    if (!checkedIds) return { code: 400, message: '"categoryIds" not found' };
     const date = new Date();
-    await BlogPost.create({ title, content, userId, updated: date, published: date });
-    const post = await BlogPost.findOne({ where: { title, content, userId } });
-    categoryIds.forEach(async (id) => {
-        await PostCategory.create({ postId: post.id, categoryId: id });
+    const post = await BlogPost.create({ 
+        title, content, userId, updated: date, published: date, 
     });
+    const myIds = categoryIds.map((id) => ({
+        postId: post.id,
+        categoryId: id,
+    }));
+    await PostCategory.bulkCreate(myIds, { ignoreDuplicates: true });
     return { code: 201, post };
 };
 

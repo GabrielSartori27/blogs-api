@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     postId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        foreignKey: true,
         references: {
             model: 'BlogPosts',
             key: 'id'
@@ -11,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     categoryId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        foreignKey: true,
         references: {
             model: 'Categories',
             key: 'id'

@@ -1,21 +1,24 @@
 const express = require('express');
 const UsersController = require('./database/controllers/usersControllers');
-const CategoriesController = require('./database/controllers/categoriesControllers');
-const BlogPostsController = require('./database/controllers/blogPostsControllers');
-const validateJWT = require('./auth/validateJWT');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
-const fs = require("fs");
+const fs = require('fs');
 const YAML = require('yaml');
-const swagger_path =  path.resolve(__dirname,'../swagger.yaml');
-const file  = fs.readFileSync(swagger_path, 'utf8');
+
+const swagger_path = path.resolve(__dirname, '../swagger.yaml');
+const file = fs.readFileSync(swagger_path, 'utf8');
 const swaggerDocument = YAML.parse(file);
+const cors = require('cors');
+const validateJWT = require('./auth/validateJWT');
+const BlogPostsController = require('./database/controllers/blogPostsControllers');
+const CategoriesController = require('./database/controllers/categoriesControllers');
 
 // ...
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.post('/login', UsersController.login);

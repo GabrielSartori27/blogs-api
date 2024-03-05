@@ -17,7 +17,7 @@ const login = async (email, password) => {
     return { code: 200, token };
 };
 
-// The function "validateEmail" was taken from the site: https://www.horadecodar.com.br/2020/09/13/como-validar-email-com-javascript/
+// Function "validateEmail" source: https://www.horadecodar.com.br/2020/09/13/como-validar-email-com-javascript/
 function validateEmail(email) {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);

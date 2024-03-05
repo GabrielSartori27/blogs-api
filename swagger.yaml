@@ -8,7 +8,7 @@ info:
     url: https://www.linkedin.com/in/gabriel-sartori-b9b44622a/
 externalDocs:
   description: Project on GitHub
-  url: https://github.com/GabrielSartori27/talker-manager-api
+  url: https://github.com/GabrielSartori27/blogs-api
 servers:
 - url: http://localhost:3000
   description: Local API
@@ -27,7 +27,7 @@ paths:
                 email:
                   type: string
                   format: email
-                  example: lewishamilton@gmail.com
+                  example: user@email.com
                 password:
                   type: string
                   format: password
@@ -63,6 +63,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Users"
+      security:
+      - auth: []
     post:
       tags:
         [User]
@@ -88,19 +90,11 @@ paths:
           content:
             application/json:
               example: "Invalid field"
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              example: "Invalid token"
         409:
           description: User already registered
           content:
             application/json:
               example: "User already registered"
-      security:
-      - auth: []
-                  
   /user/{id}:
     parameters:
     - name: id
@@ -129,6 +123,8 @@ paths:
           content:
             application/json:
               example: "User does not exist"
+      security:
+      - auth: []
   /user/me:
     delete:
       tags:
@@ -142,6 +138,8 @@ paths:
           content:
             application/json:
               example: "Invalid token"
+      security:
+      - auth: []
   /categories:
     get:
       tags:
@@ -161,6 +159,8 @@ paths:
           content:
             application/json:
               example: "Invalid token"
+      security:
+      - auth: []
     post:
       tags:
         [Categories]
@@ -191,6 +191,8 @@ paths:
           content:
             application/json:
               example: "Invalid token"
+      security:
+      - auth: []
   /post:
     post:
       tags:
@@ -246,6 +248,8 @@ paths:
           content:
             application/json:
               example: "Invalid token"
+      security:
+      - auth: []  
     get:
       tags:
         [Post]
@@ -259,6 +263,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Posts"
+      security:
+      - auth: []
   /post/search:
     parameters:
     - in: query
@@ -303,6 +309,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Posts"
+      security:
+      - auth: []
     put:
       tags: 
         [Post]
@@ -317,6 +325,8 @@ paths:
                   type: string
                 content:
                   type: string
+      security:
+      - auth: []
       responses:
         200:
           description: OK
@@ -351,6 +361,8 @@ paths:
           content:
             application/json:
               example: "Post does not exist"
+      security:
+      - auth: []
       
 components:
   schemas:
