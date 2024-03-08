@@ -1,4 +1,5 @@
 require('dotenv').config();
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/index');
 
@@ -11,8 +12,10 @@ const jwtConfig = {
 
 const login = async (email, password) => {
     if (!email || !password) return { code: 400, message: 'Some required fields are missing' };
-    const user = await User.findOne({ where: { email, password } });
+    const user = await User.findOne({ where: { email } });
     if (!user) return { code: 400, message: 'Invalid fields' };
+    const checkPassword = bcrypt.compareSync(password, user.password);
+    if (!checkPassword) return { code: 400, message: 'Invalid fields' };
     const token = jwt.sign({ data: { email } }, secret, jwtConfig);
     return { code: 200, token };
 };
@@ -29,12 +32,12 @@ const validateUser = async (displayName, email, password) => {
                message: '"displayName" length must be at least 8 characters long' }; 
        }
            if (!validateEmail(email)) {
- return { code: 400, 
-            message: '"email" must be a valid email' }; 
-}
+               return { code: 400, message: '"email" must be a valid email' };
+            }
            if (password.length < 6) {
-        return { code: 400, 
-               message: '"password" length must be at least 6 characters long' }; 
+               return { 
+                   code: 400, message: '"password" length must be at least 6 characters long',
+                }; 
        }
            const user = await User.findOne({ where: { email } });
            if (user) return { code: 409, message: 'User already registered' };
@@ -44,7 +47,8 @@ const validateUser = async (displayName, email, password) => {
 const addUser = async (displayName, email, password, image) => {
     const { code, message } = await validateUser(displayName, email, password);
     if (code) return { code, message }; 
-    await User.create({ displayName, email, password, image });
+    const hash = bcrypt.hashSync(password, 10);
+    await User.create({ displayName, email, password: hash, image });
     const token = jwt.sign({ data: { displayName, email } }, secret, jwtConfig);
     return { code: 201, token };
 };

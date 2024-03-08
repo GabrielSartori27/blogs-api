@@ -15,9 +15,7 @@ module.exports = async (req, res, next) => {
         const decoded = jwt.verify(token, secret);
         const user = await User.findOne({ where: { email: decoded.data.email } });
         if (!user) {
-            return res
-              .status(401)
-              .json({ message: 'User not found' });
+            return res.status(401).json({ message: 'User not found' });
           }
           req.user = user;
           next();

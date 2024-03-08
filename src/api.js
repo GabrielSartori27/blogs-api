@@ -1,14 +1,14 @@
 const express = require('express');
-const UsersController = require('./database/controllers/usersControllers');
+const cors = require('cors');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const fs = require('fs');
 const YAML = require('yaml');
+const UsersController = require('./database/controllers/usersControllers');
 
-const swagger_path = path.resolve(__dirname, '../swagger.yaml');
-const file = fs.readFileSync(swagger_path, 'utf8');
+const swaggerPath = path.resolve(__dirname, '../swagger.yaml');
+const file = fs.readFileSync(swaggerPath, 'utf8');
 const swaggerDocument = YAML.parse(file);
-const cors = require('cors');
 const validateJWT = require('./auth/validateJWT');
 const BlogPostsController = require('./database/controllers/blogPostsControllers');
 const CategoriesController = require('./database/controllers/categoriesControllers');
