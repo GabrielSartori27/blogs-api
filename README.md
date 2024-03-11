@@ -1,7 +1,7 @@
 # Projeto Blogs API
 
 # Contexto
-Este foi um dos projetos realizados durante meus estudos no módulo de Back-end do curso de Desenvolvimento Web Full Stack da [Trybe](https://www.betrybe.com/formacao-desenvolvimento-web). Desenvolvido utilizando tecnologias como Node.js, Express, Sequelize e MySQL, ele consiste na API de um blog, permitindo realizar um CRUD completo de usuários e postagens. Também foi utilizado JWT Token para garantir a autenticação de usuários e o projeto foi estruturado de acordo com os conceitos de arquitetura de software MSC.
+Este foi um dos projetos realizados durante meus estudos no módulo de Back-end do curso de Desenvolvimento Web Full Stack da [Trybe](https://www.betrybe.com/formacao-desenvolvimento-web){:target="_blank"}. Desenvolvido utilizando tecnologias como Node.js, Express, Sequelize e MySQL, ele consiste na API de um blog, permitindo realizar um CRUD completo de usuários e postagens. Também foi utilizado JWT Token para garantir a autenticação de usuários e o projeto foi estruturado de acordo com os conceitos de arquitetura de software MSC.
 
 Antes do início do desenvolvimento a Trybe forneceu aos estudantes um Diagrama de Entidade-Relacionamento para termos como base na configuração do Sequelize.
 
@@ -9,7 +9,7 @@ Antes do início do desenvolvimento a Trybe forneceu aos estudantes um Diagrama 
 
 >Importante: o diagrama apresentado e de propriedade da [Trybe](https://www.betrybe.com/).
 
-## Técnologias utilizadas
+## Tecnologias utilizadas
 
 NodeJS, ExpressJS, MYSQL, ES6, Sequelize ORM, JWT, bcrypt. 
 
@@ -54,11 +54,11 @@ docker exec -it blogs_api bash
 npm install
 ```
 ### Rodando Localmente:
-Observação: para rodar localmente é necessário ter o MySQL instalado em sua máquina.
+Observação: para rodar localmente é necessário ter o MySQL e o Node.js instalados em sua máquina.
 * Instale as dependências:
-```bash 
-npm install
-``` 
+  ```bash 
+  npm install
+  ``` 
 ## Executando aplicação
 
 * Para criar e popular o banco de dados:
