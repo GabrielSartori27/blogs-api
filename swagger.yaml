@@ -31,7 +31,7 @@ paths:
                 password:
                   type: string
                   format: password
-                  example: 123456
+                  example: "test123"
                   minLength: 6
       responses:
         200:
